@@ -17,7 +17,7 @@ esx script.js
 
 or node:
 
-```
+```javascript
 esx(`
 /* eslint-disable no-unused-vars */
 import * as internal from './internal/index.js';
