@@ -14,3 +14,18 @@ You can also use the command line:
 ```bash
 esx script.js
 ```
+
+or node:
+
+```
+esx(`
+/* eslint-disable no-unused-vars */
+import * as internal from './internal/index.js';
+import * as has from './has/index.js';
+import * as is from './is/index.js';
+
+export * from './internal/index.js';
+export { has, is };
+export { default as as } from './as/index.js';
+export { default as schema } from './schema/index.js';
+`)
