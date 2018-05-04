@@ -1,0 +1,57 @@
+{
+  "name": "esx",
+  "author": "Adrian C. Miranda",
+  "version": "1.0.0",
+  "description": "ES6 to CommonJS",
+  "main": "index.js",
+  "homepage": "https://github.com/adriancmiranda/esx#readme",
+  "license": "MIT",
+  "bin": "index.js",
+  "scripts": {
+    "prereport:coverage": "nyc report --reporter=text-lcov npm test > test/coverage.lcov",
+    "report:coverage": "codecov -f test/coverage.lcov --token=$CODECOV_TOKEN",
+    "upgrade": "ncu -a --loglevel verbose --packageFile package.json && npm i",
+    "dev": "run-p watch:*",
+    "test": "ava test/*.spec.js --color",
+    "test:coverage": "nyc npm test -- --no-cache --verbose",
+    "test:travis": "nyc npm test -- --no-cache --verbose",
+    "test:appveyor": "nyc npm test -- --no-cache --verbose",
+    "watch:test": "npm test -- --watch",
+    "lint": "eslint --ext .js index.js cli.js register.js parse-argv.js",
+    "travis:test": "npm test",
+    "precommit": "run-s lint test",
+    "commitmsg": "validate-commit-msg",
+    "prerelease": "npm test",
+    "release": "standard-version"
+  },
+  "files": [
+    "index.js",
+    "cli.js",
+    "register.js",
+    "parse-argv.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "config": {
+    "validate-commit-msg": {
+      "types": "conventional-commit-types"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adriancmiranda/esx.git"
+  },
+  "keywords": [
+    "es6",
+    "commonjs",
+    "transform",
+    "cjs"
+  ],
+  "bugs": {
+    "url": "https://github.com/adriancmiranda/esx/issues"
+  },
+  "dependencies": {
+    "colors": "^1.2.3",
+    "glob": "^7.1.2"
+  }
+}

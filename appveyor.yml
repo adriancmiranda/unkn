@@ -1,0 +1,36 @@
+branches:
+  only:
+    - master
+
+init:
+  - git config --global core.autocrlf input
+
+clone_depth: 50
+
+environment:
+  matrix:
+    - nodejs_version: stable
+      job_part: test
+    - nodejs_version: 7
+      job_part: test
+    - nodejs_version: 6
+      job_part: test
+
+install:
+  - ps: Install-Product node $env:nodejs_version x64
+  - npm install ava-cli -g
+  - npm install yarn -g
+  - yarn install
+  - yarn link
+  - yarn link webpack-cfg
+
+build: off
+
+matrix:
+  fast_finish: true
+
+test_script:
+  - node --version
+  - npm --version
+  - yarn --version
+  - cmd: npm run %job_part%:appveyor
