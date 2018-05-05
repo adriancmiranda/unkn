@@ -137,7 +137,7 @@ function parseExportDeclaration($match, $def, $val, $key) {
 		let uid = ctx.uid === undefined ? ctx.uid = 0 : ++ctx.uid;
 		const key = `$key${uid}`;
 		const val = `$val${uid}`;
-		const uri = $val.replace(reAllWithFromExpression, '$1');
+		const uri = $val.replace(reAllWithFromExpression, '$1').replace(opts.match, opts.replaceBy);
 		return `const ${val} = require(${uri});\nfor (const ${key} in ${val}) if (${key} == 'default' === false) exports[${key}] = ${val}[${key}]`;
 	}
 	return `exports.${$key}`;

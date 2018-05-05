@@ -16,6 +16,7 @@
     "test:coverage": "nyc npm test -- --no-cache --verbose",
     "test:travis": "nyc npm test -- --no-cache --verbose",
     "test:appveyor": "nyc npm test -- --no-cache --verbose",
+    "build:fixtures": "node cli fixtures/{index.next.js,}/{*,**/*}.next.js --replace=.next.js,.js",
     "watch:test": "npm test -- --no-cache --watch",
     "lint": "eslint --ext .js index.js cli.js register.js parse-argv.js",
     "travis:test": "npm test",
