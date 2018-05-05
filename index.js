@@ -15,7 +15,7 @@ const reBraceOpeningAtFristOrCommaOrBraceClosing = /^\{\s*|\s*(,)\s*|\s*\}$/g;
 const reBraceOpeningOrCommaOrBraceClosing = /\{\s*|\s*(,)\s*|\s*\}/g;
 const reImportExpressionWithDefault = /^(?!\{)(?:([0-9a-zA-Z_]+))\s*,\s*(\{?\s*[*0-9a-zA-Z_,\s]+\s*\}?)\s+/;
 const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][0-9a-zA-Z_\s-.\/]+['"`])/gm;
-const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class|interface|function|\(.*\)|\*\s+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
+const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class[\s\S]*|interface[\s\S]*|function[\s\S]*|\(.*\)|\*\s+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
 const reExportSimply = /^export\s*/;
 
 let opts = Object.create(null);

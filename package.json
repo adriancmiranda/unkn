@@ -5,7 +5,7 @@
   "description": "ES6 to CommonJS",
   "main": "index.js",
   "homepage": "https://github.com/adriancmiranda/esx#readme",
-  "tonicExampleFilename": "./example/index.js",
+  "tonicExampleFilename": "./example/runkit.js",
   "license": "MIT",
   "bin": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "release": "standard-version"
   },
   "dependencies": {
-    "colors": "^1.2.3",
+    "colors": "^1.2.4",
     "crypto": "^1.0.1",
     "glob": "^7.1.2",
     "os-homedir": "^1.0.2"
