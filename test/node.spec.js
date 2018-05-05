@@ -93,10 +93,18 @@ test('node / export', t => {
 			`if (context === undefined || context === null) return false;`,
 			`return context[key] === undefined === false;`,
 		`}`,
+		`export const own = function $own(ctx, prop) {`,
+			`if (ctx === null || ctx === undefined) return false;`,
+			`return Object.prototype.hasOwnProperty.call(ctx, prop);`,
+		`}`,
 	].join('\n')), [
 		`module.exports = function at(context, key) {`,
 			`if (context === undefined || context === null) return false;`,
 			`return context[key] === undefined === false;`,
+		`}`,
+		`exports.own = function $own(ctx, prop) {`,
+			`if (ctx === null || ctx === undefined) return false;`,
+			`return Object.prototype.hasOwnProperty.call(ctx, prop);`,
 		`}`,
 	].join('\n'));
 
