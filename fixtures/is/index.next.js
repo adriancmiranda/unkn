@@ -1,1 +1,1 @@
-export { default as string } from './string/index.next.js';
+export { default as string } from './index.next.js';
