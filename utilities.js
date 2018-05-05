@@ -2,7 +2,7 @@ exports.reEscapeRegExp = /[-[\]{}()*+?.,\\^$|#\s]/g;
 
 exports.escapeRegExp = (value) => {
 	exports.reEscapeRegExp.lastIndex = 0;
-	value = string(value) ? value : '';
+	value = exports.string(value) ? value : '';
 	return value.replace(exports.reEscapeRegExp, '\\$&');
 };
 
