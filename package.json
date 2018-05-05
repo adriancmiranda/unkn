@@ -49,10 +49,12 @@
     "validate-commit-msg": "^2.14.0"
   },
   "files": [
+    "example",
     "index.js",
     "cli.js",
     "register.js",
     "parse-argv.js",
+    "utilities.js",
     "LICENSE",
     "README.md"
   ],
