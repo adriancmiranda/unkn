@@ -6,20 +6,19 @@ const reAllAtFirst = /^\*/;
 const reAliasSep = /\s+as\s+/;
 const reAllAsAlias = /\*\s*as\s*/;
 const reFunctionAtFirst = /^function/;
-const reAllWithFromExpression = /\*\s+from\s+(['"`][0-9a-zA-Z_\s-.\/]+['"`])/gm;
-const reWithFromExpression = /^(([*0-9a-zA-Z_,\s]+)?\s+from\s+(['"`][0-9a-zA-Z_\s-.\/]+['"`])?|[0-9a-zA-Z_,]+)/gm;
+const reAllWithFromExpression = /\*\s+from\s+(['"`][0-9a-zA-Z_\s-./\]+['"`])/gm;
+const reWithFromExpression = /^(([*0-9a-zA-Z_,\s]+)?\s+from\s+(['"`][0-9a-zA-Z_\s-./\]+['"`])?|[0-9a-zA-Z_,]+)/gm;
 const reOpeningBraceAtFirst = /^\{/;
 const reOpeningAtFirstAndOrClosingBraceAtEnd = /^\{\s*|\s*\}$/g;
 const reAnyBraceOrComma = /(\{)\s*|\s*(,)\s*|\s*(\})$/g;
 const reBraceOpeningAtFristOrCommaOrBraceClosing = /^\{\s*|\s*(,)\s*|\s*\}$/g;
 const reBraceOpeningOrCommaOrBraceClosing = /\{\s*|\s*(,)\s*|\s*\}/g;
 const reImportExpressionWithDefault = /^(?!\{)(?:([0-9a-zA-Z_]+))\s*,\s*(\{?\s*[*0-9a-zA-Z_,\s]+\s*\}?)\s+/;
-const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][0-9a-zA-Z_\s-.\/]+['"`])/gm;
-const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class|interface|function|\(.*\)|\*\s+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
+const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][0-9a-zA-Z_\s-./\]+['"`])/gm;
+const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class|interface|function|\(.*\)|\*\s+from\s+['"`][0-9a-zA-Z_\s-./\]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][0-9a-zA-Z_\s-./\]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
 const reExportSimply = /^export\s*/;
 
 let opts = Object.create(null);
-transform.VERSION = version;
 function transform(source, options) {
 	opts = Object.assign(Object.create(null), options);
 	opts.match = string(opts.match) ? new RegExp(escapeRegExp(opts.match), opts.flags) : (regexp(opts.match) ? opts.match : '');
@@ -50,6 +49,7 @@ function parseExpression($match, $exp, $uri) {
 	} else if (reAll.test($exp)) {
 		return `const ${$exp.replace(reAllAsAlias, '')} = require(${$uri})`;
 	}
+	return '';
 }
 
 function parseDefaultExpression($match, $exp, $uri) {
@@ -89,11 +89,11 @@ function transformImportDeclarations(source) {
 	return source.replace(reImportDeclaration, parseImportDeclaration);
 }
 
-function parseDefaultValue($match, $val, $key, $uri) {
+function parseDefaultValue($match, $val, $key) {
 	return `module.exports = ${$val || $key}`;
 }
 
-function reduceExportExpression($uri, $list, $item){
+function reduceExportExpression($uri, $list, $item) {
 	reAliasSep.lastIndex = 0;
 	const chunk = $item.replace(reAliasSep, ',').split(',');
 	if ($uri) {
@@ -113,7 +113,7 @@ function reduceExportExpression($uri, $list, $item){
 
 function parseExportExpression($match, $raw, $exp, $uri) {
 	const reducer = reduceExportExpression.bind(this, $uri);
-	const expressions = ($exp ? $exp : $raw).split(',').reduce(reducer, []);
+	const expressions = ($exp || $raw).split(',').reduce(reducer, []);
 	return expressions.join('\n');
 }
 
@@ -148,4 +148,5 @@ function transformExportDeclarations($source) {
 	return $source.replace(reExportDeclaration, parseExportDeclaration);
 }
 
+transform.VERSION = version;
 module.exports = transform;
