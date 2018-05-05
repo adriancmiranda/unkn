@@ -2,19 +2,26 @@
 const fs = require('fs');
 const glob = require('glob');
 const colors = require('colors');
-const { join, resolve } = require('path');
+const { join, resolve, parse } = require('path');
+const { string } = require('./utilities');
 const parseArgv = require('./parse-argv');
-const spawn = require('./spawn');
 const transform = require('.');
 
 const argv = parseArgv(process.argv);
-const entry = argv._;
-const context = typeof argv.dir === 'string' || argv.dir instanceof String ? argv.dir : '';
-const files = entry.length > 1 ? `{${entry.join(',')}}` : entry[0] || '*';
+const reSingleComma = /^[^,]+,[^,]+$/;
+const reTrimList = /\s*(,)\s*/g;
+
+const files = argv._.length > 1 ? `{${argv._.join(',')}}` : argv._[0] || '*';
+const replaceFile = reSingleComma.test(argv.replace) ? argv.replace.replace(reTrimList, '$1').split(',') : ['', ''];
+const match = string(argv.match) ? argv.match : replaceFile[0];
+const replaceBy = string(argv.replaceby) ? argv.replaceby : replaceFile[1];
+const context = string(argv.dir) ? argv.dir : '';
+const outputDir = argv.outputdir;
 
 glob.sync(resolve(join(context, files))).forEach(file => {
-	const output = transform(fs.readFileSync(file, 'utf8').toString());
-	const outputPath = file;
+	const output = transform(fs.readFileSync(file, 'utf8').toString(), { match, replaceBy });
+	let outputPath = parse(file.replace(match, replaceBy));
+	outputPath = join(string(outputDir) ? outputDir : outputPath.dir, outputPath.base);
 	const writeStream = fs.createWriteStream(outputPath);
 	writeStream.write(output, 'utf-8');
 	writeStream.on('finish', () => {
