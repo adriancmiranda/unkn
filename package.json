@@ -5,6 +5,7 @@
   "description": "ES6 to CommonJS",
   "main": "index.js",
   "homepage": "https://github.com/adriancmiranda/esx#readme",
+  "tonicExampleFilename": "./example/index.js",
   "license": "MIT",
   "bin": "index.js",
   "scripts": {
