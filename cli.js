@@ -4,10 +4,10 @@ const glob = require('glob');
 const colors = require('colors');
 const { join, resolve, parse } = require('path');
 const { string } = require('./utilities');
-const parseArgv = require('./parse-argv');
+const readArgv = require('read-argv');
 const transform = require('.');
 
-const argv = parseArgv(process.argv);
+const argv = readArgv(process.argv);
 const reSingleComma = /^[^,]+,[^,]+$/;
 const reTrimList = /\s*(,)\s*/g;
 
