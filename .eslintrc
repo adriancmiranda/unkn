@@ -15,6 +15,7 @@ rules:
   no-multi-assign: off
   no-param-reassign: off
   no-tabs: off
+  object-curly-newline: off
 
   comma-dangle:
     - warn
