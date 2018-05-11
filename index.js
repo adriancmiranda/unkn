@@ -1,39 +1,42 @@
 const { version } = require('./package.json');
-const { callable, regexp, string, escapeRegExp } = require('./utilities');
+const isCallable = require('./utilities/isCallable');
+const isRegExp = require('./utilities/isRegExp');
+const isString = require('./utilities/isString');
+const escapeRegExp = require('./utilities/escapeRegExp');
 
 const reAll = /\*\s*/;
 const reAllAtFirst = /^\*/;
 const reAliasSep = /\s+as\s+/;
 const reAllAsAlias = /\*\s*as\s*/;
+const reAliases = /((,?\s*)[$0-9a-zA-Z_]+\s+as\s+[$0-9a-zA-Z_]+)/g;
 const reFunctionAtFirst = /^function/;
-const reAllWithFromExpression = /\*\s+from\s+(['"`][0-9a-zA-Z_\s-.\/]+['"`])/gm;
-const reWithFromExpression = /^(([*0-9a-zA-Z_,\s]+)?\s+from\s+(['"`][0-9a-zA-Z_\s-.\/]+['"`])?|[0-9a-zA-Z_,]+)/gm;
+const reAllWithFromExpression = /\*\s+from\s+(['"`][@$0-9a-zA-Z_\s-.\/]+['"`])/gm;
+const reWithFromExpression = /^(([*0-9a-zA-Z_,\s]+)?\s+from\s+(['"`][@$0-9a-zA-Z_\s-.\/]+['"`])?|[0-9a-zA-Z_,]+)/gm;
 const reOpeningBraceAtFirst = /^\{/;
 const reOpeningAtFirstAndOrClosingBraceAtEnd = /^\{\s*|\s*\}$/g;
 const reAnyBraceOrComma = /(\{)\s*|\s*(,)\s*|\s*(\})$/g;
 const reBraceOpeningAtFristOrCommaOrBraceClosing = /^\{\s*|\s*(,)\s*|\s*\}$/g;
 const reBraceOpeningOrCommaOrBraceClosing = /\{\s*|\s*(,)\s*|\s*\}/g;
 const reImportExpressionWithDefault = /^(?!\{)(?:([0-9a-zA-Z_]+))\s*,\s*(\{?\s*[*0-9a-zA-Z_,\s]+\s*\}?)\s+/;
-const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][0-9a-zA-Z_\s-.\/]+['"`])/gm;
-const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class[^{]*|interface[^{]*|function[^(]*|\(.*\)|\*\s+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
+const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[$*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][@$0-9a-zA-Z_\s-.\/]+['"`])/gm;
+const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class[^{]*|interface[^{]*|function[^(]*|\(.*\)[^>]*|\*\s+from\s+['"`][@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
 const reExportSimply = /^export\s*/;
 
 let opts = Object.create(null);
 function transform(source, options) {
 	opts = Object.assign(Object.create(null), options);
-	opts.match = string(opts.match) ? new RegExp(escapeRegExp(opts.match), opts.flags) : (regexp(opts.match) ? opts.match : '');
-	opts.replaceBy = string(opts.replaceBy) || callable(opts.replaceBy) ? opts.replaceBy : '';
+	opts.match = opts.escapeRegExp ? escapeRegExp(opts.match) : opts.match;
+	opts.match = isString(opts.match) ? new RegExp(opts.match, opts.flags) : (isRegExp(opts.match) ? opts.match : '');
+	opts.replaceBy = isString(opts.replaceBy) || isCallable(opts.replaceBy) ? opts.replaceBy : '';
 	return transformExportDeclarations(transformImportDeclarations(source, opts), opts);
 }
 
-function reduceImportExpression(uri, list, item) {
-	const chunk = item.replace(reAliasSep, ',').split(',');
-	if (chunk.length === 1) {
-		list[list.length] = `const ${chunk[0]} = require(${uri})`;
-	} else {
-		list[list.length] = `const ${chunk[1]} = require(${uri}).${chunk[0]}`;
+function reduceAliasesFromImport(aliases, item) {
+	reAliasSep.lastIndex = 0;
+	if (reAliasSep.test(item)) {
+		aliases[aliases.length] = item;
 	}
-	return list;
+	return aliases;
 }
 
 function parseExpression($match, $exp, $uri) {
@@ -42,10 +45,16 @@ function parseExpression($match, $exp, $uri) {
 	reAllAsAlias.lastIndex = 0;
 	reAll.lastIndex = 0;
 	if (reOpeningAtFirstAndOrClosingBraceAtEnd.test($exp)) {
-		const list = $exp.replace(reBraceOpeningAtFristOrCommaOrBraceClosing, '$1');
-		const reducer = reduceImportExpression.bind(this, $uri);
-		const expressions = list.split(',').reduce(reducer, []);
-		return expressions.join('\n');
+		const expressions = $exp.replace(reBraceOpeningAtFristOrCommaOrBraceClosing, '$1').split(',');
+		const expressionWithoutAliases = $exp.replace(reAliases, '').replace(/(?:^(\{\s*),*)/g, '$1');
+		const aliases = expressions.reduce(reduceAliasesFromImport, []);
+		const named = `const ${expressionWithoutAliases} = require(${$uri});`;
+		return aliases.reduce((accumulator, item, index, list) => {
+			const chunk = item.replace(reAliasSep, ',').split(',');
+			const semicolon = index === list.length - 1 ? '' : ';';
+			accumulator[accumulator.length] = `const ${chunk[1]} = require(${$uri}).${chunk[0]}${semicolon}`;
+			return accumulator;
+		}, [named]).join('\n');
 	} else if (reAll.test($exp)) {
 		return `const ${$exp.replace(reAllAsAlias, '')} = require(${$uri})`;
 	}
@@ -90,7 +99,7 @@ function transformImportDeclarations(source) {
 }
 
 function parseDefaultValue($match, $val, $key) {
-	return `module.exports = ${$val || $key}`;
+	return `module.exports = ${$val || $key || ''}`;
 }
 
 function reduceExportExpression($uri, $list, $item) {
@@ -138,7 +147,7 @@ function parseExportDeclaration($match, $def, $val, $key) {
 		const key = `$key${uid}`;
 		const val = `$val${uid}`;
 		const uri = $val.replace(reAllWithFromExpression, '$1').replace(opts.match, opts.replaceBy);
-		return `const ${val} = require(${uri});\nfor (const ${key} in ${val}) if (${key} == 'default' === false) exports[${key}] = ${val}[${key}]`;
+		return `const ${val} = require(${uri});\nfor (const ${key} in ${val}) if (${key} === 'default' === false) exports[${key}] = ${val}[${key}]`;
 	}
 	return `exports.${$key}`;
 }

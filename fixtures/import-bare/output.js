@@ -1,0 +1,11 @@
+require('foo');
+require('foo.js');
+require('foo/bar');
+require('foo/bar.js');
+require('./foo/bar');
+require('./foo/bar.js');
+require('../foo/bar');
+require('../foo/bar.js');
+require('../@f_o-o/b-a_r.js');
+require('../$f_o-o/b-a_r.js');
+require('../1f_0-o/b-a_r.js');

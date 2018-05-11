@@ -1,0 +1,15 @@
+const {foo, bar} = require('foo');
+const { foo, bar, baz} = require("foo");
+const { foo, bar, baz } = require('foo');
+const { _TEST_, _, EXPORT } = require('foo');
+const { _TEST_, _ } = require('foo');
+const $test = require('foo').EXPORT;
+const { _, test } = require('foo/bar');
+const A = require('foo/bar').a;
+const B = require('foo/bar').b;
+const C = require('foo/bar').c;
+const $test = require('foo/bar').EXPORT;
+const { _, test } = require('foo/bar/baz');
+const B = require('foo/bar/baz').b;
+const C = require('foo/bar/baz').c;
+const $test = require('foo/bar/baz').EXPORT;
