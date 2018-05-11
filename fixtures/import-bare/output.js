@@ -9,3 +9,4 @@ require('../foo/bar.js');
 require('../@f_o-o/b-a_r.js');
 require('../$f_o-o/b-a_r.js');
 require('../1f_0-o/b-a_r.js');
+require('../~f_0-o/b-a_r.js');

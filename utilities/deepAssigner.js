@@ -1,12 +1,12 @@
 const isArray = require('./isArray.js');
 const isCallable = require('./isCallable.js');
 const isObject = require('./isObject.js');
-const slice = require('./slice');
-const keys = Object.keys;
+const arrayFrom = require('./arrayFrom');
+const keys = require('./keys');
 module.exports = (strategy) => {
 	let notation = '';
 	return function assign(target) {
-		const args = slice(arguments);
+		const args = arrayFrom(arguments);
 		const output = target == null ? {} : target;
 		for (let ix = 1; ix < args.length; ix += 1) {
 			const from = args[ix];
@@ -16,8 +16,8 @@ module.exports = (strategy) => {
 				const outputValue = output[key];
 				const sourceValue = from[key];
 				if (isArray(outputValue) || isArray(sourceValue)) {
-					const f = slice(sourceValue);
-					const o = slice(outputValue);
+					const f = arrayFrom(sourceValue);
+					const o = arrayFrom(outputValue);
 					output[key] = strategy(f, o, `${notation}.${key}`, keyList);
 				} else if (isCallable(outputValue) || isCallable(sourceValue)) {
 					output[key] = strategy(sourceValue, outputValue, `${notation}.${key}`, keyList);

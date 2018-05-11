@@ -25,7 +25,7 @@ glob.sync(resolve(join(context, files))).forEach(file => {
 	const output = transform(fs.readFileSync(file, 'utf8').toString(), options);
 	let outputPath = parse(file.replace(match, replaceBy));
 	outputPath = join(isString(outputDir) ? outputDir : outputPath.dir, outputPath.base);
-	if (process.env.NODE_ENV === 'test') return console.log(output);
+	if (/test/i.test(process.env.NODE_ENV)) return console.log(output);
 	const writeStream = fs.createWriteStream(outputPath);
 	writeStream.write(output, 'utf-8');
 	writeStream.on('finish', () => {
