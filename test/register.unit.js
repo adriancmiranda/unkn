@@ -1,5 +1,5 @@
 import test from 'ava';
-import register from '../register.next';
+import register from '../register';
 import * as fixtures from '../fixtures/library/index.registered';
 
 test('register', t => {

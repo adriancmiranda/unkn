@@ -1,6 +1,6 @@
 import test from 'ava';
 import colors from 'colors';
-import node from '../index.next';
+import node from '../index';
 import * as fixturesReader from '../fixtures/reader';
 
 fixturesReader.walk((actual, expected, dir) => {

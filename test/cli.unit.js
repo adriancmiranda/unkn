@@ -1,9 +1,9 @@
 import test from 'ava';
 import cross from 'cross-spawn';
-import { array } from '../utilities';
+import isArray from '../utilities/isArray';
 
 const spawn = (args) => {
-	cross.sync('../cli.js', array(args) ? args : []);
+	cross.sync('../cli.js', isArray(args) ? args : []);
 };
 
 test('cli', t => {
