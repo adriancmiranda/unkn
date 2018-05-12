@@ -1,8 +1,8 @@
 const { version } = require('./package.json');
-const isCallable = require('./utilities/isCallable');
-const isRegExp = require('./utilities/isRegExp');
-const isString = require('./utilities/isString');
-const escapeRegExp = require('./utilities/escapeRegExp');
+const isCallable = require('./common/isCallable');
+const isRegExp = require('./common/isRegExp');
+const isString = require('./common/isString');
+const escapeRegExp = require('./common/escapeRegExp');
 
 const reAll = /\*\s*/;
 const reAllAtFirst = /^\*/;

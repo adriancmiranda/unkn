@@ -4,7 +4,7 @@ const glob = require('glob');
 const colors = require('colors');
 const readArgv = require('read-argv');
 const { join, resolve, parse } = require('path');
-const isString = require('./utilities/isString');
+const isString = require('./common/isString');
 const transform = require('.');
 
 const argv = readArgv(process.argv);

@@ -1,6 +1,6 @@
 const { resolve, join } = require('path');
 const { statSync, readdirSync, readFileSync } = require('fs');
-const isCallable = require('../../utilities/isCallable');
+const isCallable = require('../../common/isCallable');
 
 function read(next, dir) {
 	if (/^(reader|library)$/g.test(dir.name)) return;
