@@ -1,10 +1,15 @@
 exports.arrayFrom = require('./arrayFrom');
+exports.create = require('./create');
+exports.assign = require('./assign');
 exports.deepAssign = require('./deepAssign');
 exports.deepAssigner = require('./deepAssigner');
+exports.ensureRegExp = require('./ensureRegExp');
 exports.escapeRegExp = require('./escapeRegExp');
 exports.isArray = require('./isArray');
 exports.isCallable = require('./isCallable');
 exports.isObject = require('./isObject');
 exports.isRegExp = require('./isRegExp');
 exports.isString = require('./isString');
+exports.keys = require('./keys');
+exports.noop = require('./noop');
 exports.normalizeLines = require('./normalizeLines');

@@ -3,6 +3,7 @@ const isCallable = require('./isCallable.js');
 const isObject = require('./isObject.js');
 const arrayFrom = require('./arrayFrom');
 const keys = require('./keys');
+
 module.exports = (strategy) => {
 	let notation = '';
 	return function assign(target) {
