@@ -3,6 +3,9 @@ const isCallable = require('./common/isCallable');
 const isRegExp = require('./common/isRegExp');
 const isString = require('./common/isString');
 const escapeRegExp = require('./common/escapeRegExp');
+const create = require('./common/create');
+const assign = require('./common/assign');
+const match = require('./tools/match');
 
 const reAll = /\*\s*/;
 const reAllAtFirst = /^\*/;
@@ -22,9 +25,13 @@ const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?
 const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class[^{]*|interface[^{]*|function[^(]*|\(.*\)[^>]*|\*\s+from\s+['"`][~@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][~@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
 const reExportSimply = /^export\s*/;
 
-let opts = Object.create(null);
+// const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[$*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][~@$0-9a-zA-Z_\s-.\/]+['"`])/gm;
+// console.clear();
+console.log(match.allBetween('~', match.group('import'))());
+
+let opts = create(null);
 function transform(source, options) {
-	opts = Object.assign(Object.create(null), options);
+	opts = assign(create(null), options);
 	opts.match = opts.escapeRegExp ? escapeRegExp(opts.match) : opts.match;
 	opts.match = isString(opts.match) ? new RegExp(opts.match, opts.flags) : (isRegExp(opts.match) ? opts.match : '');
 	opts.replaceBy = isString(opts.replaceBy) || isCallable(opts.replaceBy) ? opts.replaceBy : '';
