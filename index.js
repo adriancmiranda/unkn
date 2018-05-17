@@ -25,10 +25,6 @@ const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?
 const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class[^{]*|interface[^{]*|function[^(]*|\(.*\)[^>]*|\*\s+from\s+['"`][~@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][~@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
 const reExportSimply = /^export\s*/;
 
-// const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[$*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][~@$0-9a-zA-Z_\s-.\/]+['"`])/gm;
-// console.clear();
-console.log(match.allBetween('~', match.group('import'))());
-
 let opts = create(null);
 function transform(source, options) {
 	opts = assign(create(null), options);
