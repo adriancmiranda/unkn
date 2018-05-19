@@ -28,11 +28,11 @@
     "release": "standard-version"
   },
   "dependencies": {
-    "colors": "^1.2.4",
+    "colors": "1.2.4",
     "describe-type": "0.7.0",
     "glob": "7.1.2",
     "read-argv": "1.0.0",
-    "rx4d": "1.2.4"
+    "rx4d": "1.3.0"
   },
   "devDependencies": {
     "@babel/cli": "7.0.0-beta.46",
@@ -41,8 +41,8 @@
     "@babel/polyfill": "7.0.0-beta.46",
     "@babel/preset-env": "7.0.0-beta.46",
     "@babel/register": "7.0.0-beta.46",
-    "@commitlint/cli": "^6.2.0",
-    "@commitlint/config-conventional": "^6.1.3",
+    "@commitlint/cli": "6.2.0",
+    "@commitlint/config-conventional": "6.1.3",
     "ava": "1.0.0-beta.4",
     "babel-eslint": "8.2.3",
     "cross-env": "5.1.5",
