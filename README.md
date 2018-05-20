@@ -1,6 +1,8 @@
 # ESx
 > ES6 to Commonjs
 
+[![stability]][stability-url]
+
 ## Usage:
 
 One of the ways you can use ESx is through the require hook. The require hook will bind itself to node's require and automatically compile files on the fly.
@@ -34,3 +36,9 @@ export { default as schema } from './schema/index.js';
 
 esx(source);
 ```
+
+[stability]: http://badges.github.io/stability-badges/dist/experimental.svg
+[stability-url]: http://learnhtmlwithsong.com/blog/wp-content/uploads/2014/12/errors-everywhere-meme.png
+
+<!-- helpful links -->
+[Bayfront Technologies - mc tutorial]: http://www.bayfronttechnologies.com/mc_tutorial.html
