@@ -5,6 +5,7 @@ const isString = require('./common/isString');
 const escapeRegExp = require('./common/escapeRegExp');
 const create = require('./common/create');
 const assign = require('./common/assign');
+const toPascalCase = require('./common/toPascalCase');
 
 const reAll = /\*\s*/;
 const reAllAtFirst = /^\*/;
@@ -157,12 +158,11 @@ function parseExportDeclaration($match, $def, $val, $key) {
 	} else if (reFunctionAtFirst.test($val)) {
 		return `exports.${$key} = ${$match.replace(reExportSimply, '')}`;
 	} else if (reAllAtFirst.test($val)) {
-		const ctx = parseExportDeclaration;
-		let uid = ctx.uid === undefined ? ctx.uid = 0 : ++ctx.uid;
-		const key = `$key${uid}`;
-		const val = `$val${uid}`;
 		const uri = $val.replace(reAllWithFromExpression, '$1').replace(opts.pattern, opts.replacement);
-		return `const ${val} = require(${uri});\nfor (const ${key} in ${val}) if (${key} === 'default' === false) exports[${key}] = ${val}[${key}]`;
+		const uid = toPascalCase(uri.replace(/\.\/|["'`]+/g, '').replace(/\.js$/, '').replace(/[^\w]+/g, '_'));
+		const val = `$val${uid}`;
+		const key = `$key${uid}`;
+		return `const ${val} = require(${uri});\nfor (const ${key} in ${val}) {\n\tif (${key} === 'default' === false) {\n\t\texports[${key}] = ${val}[${key}];\n\t}\n}`;
 	}
 	return `exports.${$key}`;
 }

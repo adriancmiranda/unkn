@@ -15,7 +15,7 @@ test('transform.VERSION', t => {
 
 fixturesReader((actual, expected, dir) => {
 	test(`${dir.name}`, t => {
-		const output = node(actual);
+		const output = node(actual, { pattern: '.next.js', replacement: '.js' });
 		t.is(output, expected, `${
 		colors.green(
 			`\`\`\`actual\n${
