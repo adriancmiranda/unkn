@@ -13,7 +13,7 @@ test('transform.VERSION', t => {
 	t.is(node.VERSION, version, 'should be the same VERSION');
 });
 
-fixturesReader('export-default', (actual, expected, dir) => {
+fixturesReader((actual, expected, dir) => {
 	test(`${dir.name}`, t => {
 		const output = node(actual);
 		t.is(output, expected, `${

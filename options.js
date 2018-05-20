@@ -1,14 +1,14 @@
-const ensureRegExp = require('../common/ensureRegExp');
-const isCallable = require('../common/isCallable');
-const isRegExp = require('../common/isRegExp');
-const isString = require('../common/isString');
-const isArray = require('../common/isArray');
-const assign = require('../common/assign');
-const create = require('../common/create');
-const match = require('./match');
+const ensureRegExp = require('./common/ensureRegExp');
+const isCallable = require('./common/isCallable');
+const isRegExp = require('./common/isRegExp');
+const isString = require('./common/isString');
+const isArray = require('./common/isArray');
+const assign = require('./common/assign');
+const create = require('./common/create');
+const match = require('./lexer/match');
 
-const rxTrimList = match.listSep.flags('g');
-const reSingleComma = match.listOfTwoItems.flags()();
+const reTrimList = /\s*(,)\s*/g;
+const reSingleComma = /^[^,]+,[^,]+$/;
 
 const validatePattern = (value) => (
 	isString(value) || isRegExp(value)
@@ -35,11 +35,11 @@ const validateObject = (value) => {
 
 const split = (value) => {
 	if (validateArray(value) || validateObject(value)) return value;
-	if (validateString(value)) return value.replace(rxTrimList(), '$1').split(',');
+	if (validateString(value)) return value.replace(reTrimList, '$1').split(',');
 	return [];
 };
 
-module.exports = (value) => {
+exports.replace = (value) => {
 	const replace = split(value);
 	const options = create(null);
 	options.pattern = ensureRegExp(replace[0]);

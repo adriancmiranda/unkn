@@ -5,7 +5,6 @@ const isString = require('./common/isString');
 const escapeRegExp = require('./common/escapeRegExp');
 const create = require('./common/create');
 const assign = require('./common/assign');
-const match = require('./tools/match');
 
 const reAll = /\*\s*/;
 const reAllAtFirst = /^\*/;
@@ -28,13 +27,10 @@ const reExportSimply = /^export\s*/;
 let opts = create(null);
 function transform(source, options) {
 	opts = assign(create(null), options);
-	opts.match = opts.escapeRegExp ? escapeRegExp(opts.match) : opts.match;
-	opts.match = isString(opts.match) ? new RegExp(opts.match, opts.flags) : (isRegExp(opts.match) ? opts.match : '');
-	opts.replaceBy = isString(opts.replaceBy) || isCallable(opts.replaceBy) ? opts.replaceBy : '';
 	return transformExportDeclarations(transformImportDeclarations(source, opts), opts);
 }
 
-function reduceAliasesFromImport(aliases, item) {
+function reduceAliases(aliases, item) {
 	reAliasSep.lastIndex = 0;
 	if (reAliasSep.test(item)) {
 		aliases[aliases.length] = item;
@@ -50,7 +46,7 @@ function parseExpression($match, $exp, $uri) {
 	if (reOpeningAtFirstAndOrClosingBraceAtEnd.test($exp)) {
 		const expressions = $exp.replace(reBraceOpeningAtFristOrCommaOrBraceClosing, '$1').split(',');
 		const expressionWithoutAliases = $exp.replace(reAliases, '').replace(/(?:^(\{\s*),*)/g, '$1');
-		const aliases = expressions.reduce(reduceAliasesFromImport, []);
+		const aliases = expressions.reduce(reduceAliases, []);
 		const named = `const ${expressionWithoutAliases} = require(${$uri});`;
 		return aliases.reduce((accumulator, item, index, list) => {
 			const chunk = item.replace(reAliasSep, ',').split(',');
@@ -85,7 +81,7 @@ function parseDefaultExpression($match, $exp, $uri) {
 
 function parseImportDeclaration($match, $var, $exp, $uri) {
 	reImportExpressionWithDefault.lastIndex = 0;
-	$uri = $uri.replace(opts.match, opts.replaceBy);
+	$uri = $uri.replace(opts.pattern, opts.replacement);
 	if (reImportExpressionWithDefault.test($exp)) {
 		return parseDefaultExpression($match, $exp, $uri);
 	} else if (reAliasSep.test($exp)) {
@@ -109,7 +105,7 @@ function reduceExportExpression($uri, $list, $item) {
 	reAliasSep.lastIndex = 0;
 	const chunk = $item.replace(reAliasSep, ',').split(',');
 	if ($uri) {
-		$uri = $uri.replace(opts.match, opts.replaceBy);
+		$uri = $uri.replace(opts.pattern, opts.replacement);
 		if (chunk.length === 1) {
 			$list[$list.length] = `exports.${chunk[0]} = require(${$uri})`;
 		} else if (chunk[0] === 'default') {
@@ -141,7 +137,17 @@ function parseExportDeclaration($match, $def, $val, $key) {
 		return parseDefaultValue($match, $val, $key);
 	} else if (reOpeningBraceAtFirst.test($val)) {
 		$val = $val.replace(reBraceOpeningOrCommaOrBraceClosing, '$1');
-		return $val.replace(reWithFromExpression, parseExportExpression);
+		const expressions = $val.replace(reBraceOpeningAtFristOrCommaOrBraceClosing, '$1').split(',');
+		return expressions.reduce((accumulator, item, index, list) => {
+			const comma = index === list.length - 1 ? '' : ';';
+			if (reAliasSep.test(item)) {
+				const expression = item.split(reAliasSep);
+				accumulator[accumulator.length] = `exports.${expression[1]} = ${expression[0]}${comma}`;
+			} else {
+				accumulator[accumulator.length] = `exports.${item} = ${item}${comma}`;
+			}
+			return accumulator;
+		}, []).join('\n');
 	} else if (reFunctionAtFirst.test($val)) {
 		return `exports.${$key} = ${$match.replace(reExportSimply, '')}`;
 	} else if (reAllAtFirst.test($val)) {
@@ -149,7 +155,7 @@ function parseExportDeclaration($match, $def, $val, $key) {
 		let uid = ctx.uid === undefined ? ctx.uid = 0 : ++ctx.uid;
 		const key = `$key${uid}`;
 		const val = `$val${uid}`;
-		const uri = $val.replace(reAllWithFromExpression, '$1').replace(opts.match, opts.replaceBy);
+		const uri = $val.replace(reAllWithFromExpression, '$1').replace(opts.pattern, opts.replacement);
 		return `const ${val} = require(${uri});\nfor (const ${key} in ${val}) if (${key} === 'default' === false) exports[${key}] = ${val}[${key}]`;
 	}
 	return `exports.${$key}`;
