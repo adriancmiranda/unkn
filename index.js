@@ -144,6 +144,7 @@ function parseExportDeclaration($match, $def, $val, $key) {
 				let expression = item.split(reAliasSep);
 				if (expression[0] === 'default' && reWithFromExpression.test(expression[1])) {
 					expression = expression[1].replace(reWithFromExpression, '$2,$3').split(',');
+					expression[1] = expression[1].replace(opts.pattern, opts.replacement);
 					accumulator[accumulator.length] = `exports.${expression[0]} = require(${expression[1]})${comma}`;
 				} else {
 					accumulator[accumulator.length] = `exports.${expression[1]} = ${expression[0]}${comma}`;
