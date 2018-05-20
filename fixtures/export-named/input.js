@@ -15,3 +15,7 @@ export {test};
 const $module = {exports: {}};
 $module.exports.foo = "foo";
 export default $module.exports;
+
+export * from './internal/index.next.js';
+export { has, is };
+export { default as schema } from './schema/index.next.js';

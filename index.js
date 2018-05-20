@@ -141,8 +141,13 @@ function parseExportDeclaration($match, $def, $val, $key) {
 		return expressions.reduce((accumulator, item, index, list) => {
 			const comma = index === list.length - 1 ? '' : ';';
 			if (reAliasSep.test(item)) {
-				const expression = item.split(reAliasSep);
-				accumulator[accumulator.length] = `exports.${expression[1]} = ${expression[0]}${comma}`;
+				let expression = item.split(reAliasSep);
+				if (expression[0] === 'default' && reWithFromExpression.test(expression[1])) {
+					expression = expression[1].replace(reWithFromExpression, '$2,$3').split(',');
+					accumulator[accumulator.length] = `exports.${expression[0]} = require(${expression[1]})${comma}`;
+				} else {
+					accumulator[accumulator.length] = `exports.${expression[1]} = ${expression[0]}${comma}`;
+				}
 			} else {
 				accumulator[accumulator.length] = `exports.${item} = ${item}${comma}`;
 			}
