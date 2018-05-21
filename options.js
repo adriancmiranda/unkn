@@ -1,5 +1,6 @@
 const ensureRegExp = require('./common/ensureRegExp');
 const isCallable = require('./common/isCallable');
+const isObject = require('./common/isObject');
 const isRegExp = require('./common/isRegExp');
 const isString = require('./common/isString');
 const isArray = require('./common/isArray');
@@ -40,7 +41,7 @@ const split = (value) => {
 
 exports.replace = (value) => {
 	const replace = split(value);
-	const options = create(null);
+	const options = isObject(value) ? value : create(null);
 	options.pattern = ensureRegExp(replace[0]);
 	options.replacement = validateReplacement(replace[1]) ? replace[1] : '';
 	return options;
