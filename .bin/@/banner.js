@@ -10,5 +10,5 @@ module.exports = (pack, git, options) => pirateFlag(pack, {
   moment: moment().format('LLLL'),
   homepage: pack.homepage,
   author: pack.author,
-  license: `(c) 2016-${+moment().format('GGGG') + 3} Adrian C. Miranda\n`,
+  license: `(c) 2016-${+moment().format('GGGG') + 3}\n`,
 }, assign({ comment: true }, options));
