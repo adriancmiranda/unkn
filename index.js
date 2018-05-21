@@ -1,11 +1,5 @@
 const { version } = require('./package.json');
-const isCallable = require('./common/isCallable');
-const isRegExp = require('./common/isRegExp');
-const isString = require('./common/isString');
-const escapeRegExp = require('./common/escapeRegExp');
 const create = require('./common/create');
-const assign = require('./common/assign');
-const toPascalCase = require('./common/toPascalCase');
 
 const reAll = /\*\s*/;
 const reAllAtFirst = /^\*/;
@@ -24,9 +18,6 @@ const reImportExpressionWithDefault = /^(?!\{)(?:([0-9a-zA-Z_]+))\s*,\s*(\{?\s*[
 const reImportDeclaration = /^(?!\/\/|\*)import\s+(((?:[0-9a-zA-Z_]+\s*,\s*)?\{?\s*[$*0-9a-zA-Z_,\s]+\s*\}?)\s+from\s+)?(['"`][~@$0-9a-zA-Z_\s-.\/]+['"`])/gm;
 const reExportDeclaration = /^export\s+(default)?\s*(const|let|var|class[^{]*|interface[^{]*|function[^(]*|\(.*\)[^>]*|\*\s+from\s+['"`][~@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{*\s,}]+from\s+['"`][~@$0-9a-zA-Z_\s-.\/]+['"`]|[0-9a-zA-Z_{}\s*,]+)?\s*([0-9a-zA-Z_]+)?/gm;
 const reExportSimply = /^export\s*/;
-const reDotSlashOrQuotes = /\.\/|["'`]+/g;
-const reNonWord = /[^\w]+/g;
-const reJSExt = /\.js$/;
 
 let opts = create(null);
 function transform(source, options) {
@@ -161,13 +152,15 @@ function parseExportDeclaration($match, $def, $val, $key) {
 	} else if (reFunctionAtFirst.test($val)) {
 		return `exports.${$key} = ${$match.replace(reExportSimply, '')}`;
 	} else if (reAllAtFirst.test($val)) {
-		reDotSlashOrQuotes.lastIndex = 0;
-		reNonWord.lastIndex = 0;
 		const uri = $val.replace(reAllWithFromExpression, '$1').replace(opts.pattern, opts.replacement);
-		const uid = toPascalCase(uri.replace(reDotSlashOrQuotes, '').replace(reJSExt, '').replace(reNonWord, '_'));
-		const val = `$val${uid}`;
-		const key = `$key${uid}`;
-		return `const ${val} = require(${uri});\nfor (const ${key} in ${val}) {\n\tif (${key} === 'default' === false) {\n\t\texports[${key}] = ${val}[${key}];\n\t}\n}`;
+		return [
+		'(function (resource) {',
+		'\tfor (const name in resource) {',
+		'\t\tif (name === \'default\' === false) {',
+		'\t\t\tthis[name] = resource[name];',
+		'\t\t}',
+		'\t}',
+		`}).call(exports, require(${uri}));`].join('\n');
 	}
 	return `exports.${$key}`;
 }
