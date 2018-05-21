@@ -18,12 +18,13 @@ const $module = {exports: {}};
 $module.exports.foo = "foo";
 module.exports = $module.exports;
 
-const $valInternalIndex = require('./internal/index.js');
-for (const $keyInternalIndex in $valInternalIndex) {
-	if ($keyInternalIndex === 'default' === false) {
-		exports[$keyInternalIndex] = $valInternalIndex[$keyInternalIndex];
+(function (resource) {
+	for (const name in resource) {
+		if (name === 'default' === false) {
+			this[name] = resource[name];
+		}
 	}
-};
+}).call(exports, require('./internal/index.js'));
 exports.has = has;
 exports.is = is;
 exports.schema = require('./schema/index.js');

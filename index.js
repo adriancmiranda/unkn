@@ -1,4 +1,6 @@
 const { version } = require('./package.json');
+const { replace } = require('./options');
+const isString = require('./common/isString');
 const create = require('./common/create');
 
 const reAll = /\*\s*/;
@@ -21,7 +23,8 @@ const reExportSimply = /^export\s*/;
 
 let opts = create(null);
 function transform(source, options) {
-	opts = assign(create(null), options);
+	opts = replace(options);
+	source = isString(source) ? source : '';
 	return transformExportDeclarations(transformImportDeclarations(source, opts), opts);
 }
 
@@ -160,7 +163,7 @@ function parseExportDeclaration($match, $def, $val, $key) {
 		'\t\t\tthis[name] = resource[name];',
 		'\t\t}',
 		'\t}',
-		`}).call(exports, require(${uri}));`].join('\n');
+		`}).call(exports, require(${uri}))`].join('\n');
 	}
 	return `exports.${$key}`;
 }
