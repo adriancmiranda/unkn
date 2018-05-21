@@ -22,7 +22,7 @@ glob.sync(resolve(join(context, files))).forEach(file => {
 	const writeStream = fs.createWriteStream(outputPath);
 	writeStream.write(output, 'utf-8');
 	writeStream.on('finish', () => {
-		console.info(colors.underline('esx:'), file, colors.green(' -> '), outputPath);
+		console.info(colors.underline('unkn:'), file, colors.green(' -> '), outputPath);
 	});
 	writeStream.end();
 });

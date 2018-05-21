@@ -1,26 +1,26 @@
-# ESx
+# Unkn
 > ES6 to Commonjs
 
 [![stability]][stability-url]
 
 ## Usage:
 
-One of the ways you can use ESx is through the require hook. The require hook will bind itself to node's require and automatically compile files on the fly.
+One of the ways you can use Unkn is through the require hook. The require hook will bind itself to node's require and automatically compile files on the fly.
 
 ```javascript
-require('esx/register')();
+require('unkn/register')();
 ```
 
 You can also use the command line:
 
 ```bash
-esx script.next.js --replace='/.next(.js)?/i,$1'
+unkn script.next.js --replace='/.next(.js)?/i,$1'
 ```
 
 or node:
 
 ```javascript
-const esx = require('esx');
+const unkn = require('unkn');
 
 const source = `
 /* eslint-disable no-unused-vars */
@@ -34,7 +34,7 @@ export { default as as } from './as/index.js';
 export { default as schema } from './schema/index.js';
 `;
 
-esx(source);
+unkn(source);
 ```
 
 [stability]: http://badges.github.io/stability-badges/dist/experimental.svg
