@@ -1,11 +1,10 @@
 const ensureRegExp = require('./common/ensureRegExp');
 const isCallable = require('./common/isCallable');
+const isObject = require('./common/isObject');
 const isRegExp = require('./common/isRegExp');
 const isString = require('./common/isString');
 const isArray = require('./common/isArray');
-const assign = require('./common/assign');
 const create = require('./common/create');
-const match = require('./lexer/match');
 
 const reTrimList = /\s*(,)\s*/g;
 const reSingleComma = /^[^,]+,[^,]+$/;
@@ -34,14 +33,15 @@ const validateObject = (value) => {
 };
 
 const split = (value) => {
-	if (validateArray(value) || validateObject(value)) return value;
+	if (validateArray(value)) return value;
+	if (validateObject(value)) return [value.pattern, value.replacement];
 	if (validateString(value)) return value.replace(reTrimList, '$1').split(',');
 	return [];
 };
 
 exports.replace = (value) => {
 	const replace = split(value);
-	const options = create(null);
+	const options = isObject(value) ? value : create(null);
 	options.pattern = ensureRegExp(replace[0]);
 	options.replacement = validateReplacement(replace[1]) ? replace[1] : '';
 	return options;
