@@ -1,7 +1,7 @@
 {
   "name": "unkn",
   "author": "Adrian C. Miranda",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ES6 to CommonJS",
   "homepage": "https://github.com/adriancmiranda/unkn#readme",
   "bin": "index.js",
@@ -73,7 +73,10 @@
   "files": [
     "common",
     "example",
-    "utilities",
+    "options.js",
+    "options.min.js",
+    "options.min.js.map",
+    "options.next.js",
     "index.js",
     "index.min.js",
     "index.min.js.map",
