@@ -16,7 +16,7 @@
     "test:fixtures": "cross-env NODE_ENV=test npm run build:lib",
     "rollup": "rollup -c .bin/index.js",
     "unbuild": "rimraf dist/*.{js,map,gz}",
-    "build:lib": "node cli fixtures/library/{*,**/*}.next.js --replace=.next.js,.js",
+    "build:lib": "node cli fixtures/library/{*,**/*}.next.js --replace='/.next(.js)?/i,$1'",
     "build:minify": "npm run rollup -- --environment=SIGN,MINIFY,NODE_ENV:production",
     "build:concat": "npm run unbuild && npm run rollup -- --environment=SIGN,INDENT,NODE_ENV:production",
     "build": "run-s build:concat build:minify",
@@ -28,11 +28,12 @@
     "release": "standard-version"
   },
   "dependencies": {
+    "acorn": "5.5.3",
     "colors": "1.2.4",
     "describe-type": "0.7.0",
+    "escodegen": "1.9.1",
     "glob": "7.1.2",
-    "read-argv": "1.0.0",
-    "rx4d": "1.3.0"
+    "read-argv": "1.0.0"
   },
   "devDependencies": {
     "@babel/cli": "7.0.0-beta.46",
