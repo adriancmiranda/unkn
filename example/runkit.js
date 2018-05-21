@@ -1,4 +1,4 @@
-const esx = require('esx');
+const unkn = require('unkn');
 
 const source = `
 /* eslint-disable no-unused-vars */
@@ -12,4 +12,4 @@ export { default as as } from './as/index.js';
 export { default as schema } from './schema/index.js';
 `;
 
-esx(source);
+unkn(source);

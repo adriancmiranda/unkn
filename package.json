@@ -1,9 +1,9 @@
 {
-  "name": "esx",
+  "name": "unkn",
   "author": "Adrian C. Miranda",
   "version": "1.0.0",
   "description": "ES6 to CommonJS",
-  "homepage": "https://github.com/adriancmiranda/esx#readme",
+  "homepage": "https://github.com/adriancmiranda/unkn#readme",
   "bin": "index.js",
   "main": "index.js",
   "unpkg": "index.js",
@@ -103,9 +103,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adriancmiranda/esx.git"
+    "url": "git+https://github.com/adriancmiranda/unkn.git"
   },
   "bugs": {
-    "url": "https://github.com/adriancmiranda/esx/issues"
+    "url": "https://github.com/adriancmiranda/unkn/issues"
   }
 }

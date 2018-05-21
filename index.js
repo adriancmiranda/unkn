@@ -9,7 +9,7 @@ const isString = require('./common/isString');
 const isArray = require('./common/isArray');
 const assign = require('./common/assign');
 
-class ESx {
+class Unkn {
 	constructor(source, options) {
 		this.tokens = [];
 		this.comments = [];
@@ -139,5 +139,5 @@ class ESx {
 	}
 }
 
-module.exports = (source, options) => new ESx(source, options).parse();
+module.exports = (source, options) => new Unkn(source, options).parse();
 module.exports.VERSION = version;
