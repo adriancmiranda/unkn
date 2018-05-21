@@ -72,7 +72,14 @@ class ESx {
 		return accumulator;
 	}
 
+	ImportBare(node) {
+		const uri0 = node.source ? node.source.value : '';
+		const uriF = uri0.replace(this.options.pattern, this.options.replacement);
+		return `require('${uriF}');`;
+	}
+
 	ImportDeclaration(node) {
+		if (node.specifiers.length === 0) return this.ImportBare(node);
 		const uri0 = node.source ? node.source.value : '';
 		const uriF = uri0.replace(this.options.pattern, this.options.replacement);
 		const specifiers = node.specifiers || [];
