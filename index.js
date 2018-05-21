@@ -1,5 +1,6 @@
 const colors = require('colors');
 const { parse } = require('acorn');
+const { attachComments, generate } = require('escodegen');
 const { version } = require('./package.json');
 const { replace } = require('./options');
 const toPascalCase = require('./common/toPascalCase');
@@ -48,6 +49,7 @@ class ESx {
 			allowReturnOutsideFunction: true,
 			onComment: this.comments,
 			onToken: this.tokens,
+			ranges: true,
 		}, options);
 	}
 
@@ -78,7 +80,7 @@ class ESx {
 			const output = `const ${item.local.name} = require('${uriF}');`;
 			accumulator[accumulator.length] = output;
 			return accumulator;
-		}, []);
+		}, []).join('\n');
 	}
 
 	ExportAllDeclaration(node) {
