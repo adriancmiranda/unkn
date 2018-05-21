@@ -14,7 +14,7 @@ require('esx/register')();
 You can also use the command line:
 
 ```bash
-esx script.next.js --replace=.next.js,.js
+esx script.next.js --replace='/.next(.js)?/i,$1'
 ```
 
 or node:
