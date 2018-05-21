@@ -1,13 +1,12 @@
 {
   "name": "unkn",
   "author": "Adrian C. Miranda",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ES6 to CommonJS",
   "homepage": "https://github.com/adriancmiranda/unkn#readme",
-  "bin": "index.js",
+  "bin": "cli.js",
   "main": "index.js",
-  "unpkg": "index.js",
-  "module": "index.next.js",
+  "module": "index.js",
   "tonicExampleFilename": "example/runkit.js",
   "license": "MIT",
   "scripts": {
