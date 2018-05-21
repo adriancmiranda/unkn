@@ -18,6 +18,7 @@ unkn script.next.js --replace='/.next(.js)?/i,$1'
 ```
 
 or node:
+> [_play with runkit_](https://npm.runkit.com/unkn)
 
 ```javascript
 const unkn = require('unkn');
