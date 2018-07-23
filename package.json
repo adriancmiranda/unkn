@@ -10,7 +10,7 @@
   "tonicExampleFilename": "example/runkit.js",
   "license": "MIT",
   "scripts": {
-    "upgrade": "npx npm-check -uEy",
+    "check": "npx npm-check -uEy",
     "test": "cross-env NODE_ENV=test ava test/*.unit.js --color",
     "test:fixtures": "cross-env NODE_ENV=test npm run build:lib",
     "rollup": "rollup -c .bin/index.js",
