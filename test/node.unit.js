@@ -13,7 +13,7 @@ test('transform.VERSION', t => {
 	t.is(node.VERSION, version, 'should be the same VERSION');
 });
 
-fixturesReader((actual, expected, dir) => {
+fixturesReader('combined', (actual, expected, dir) => {
 	test(`${dir.name}`, t => {
 		const output = node(actual, { pattern: '.next.js', replacement: '.js' });
 		t.is(output, expected, `${
